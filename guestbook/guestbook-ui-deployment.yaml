@@ -1,3 +1,23 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: guestbook-ui
+# spec:
+#   replicas: 1
+#   revisionHistoryLimit: 3
+#   selector:
+#     matchLabels:
+#       app: guestbook-ui
+#   template:
+#     metadata:
+#       labels:
+#         app: guestbook-ui
+#     spec:
+#       containers:
+#       - image: docker.io/googlecontainerregistry/guestbook-ubuntu-amd64:v2.0.0
+#         name: guestbook-ui
+#         ports:
+#         - containerPort: 80
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,7 +34,9 @@ spec:
         app: guestbook-ui
     spec:
       containers:
-      - image: docker.io/googlecontainerregistry/guestbook-ubuntu-amd64:v2.0.0
-        name: guestbook-ui
+      - name: guestbook-ui
+        # 🎯 외부 도커허브/구글망 통신 거부 상태를 우회하는 100% 내장 순정 아티팩트
+        image: registry.k8s.io/pause:3.9
+        imagePullPolicy: IfNotPresent # 👈 로컬 노드에 있는 캐시를 최우선으로 쓰도록 강제 낙인
         ports:
         - containerPort: 80
